@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}"
+</head>
+<body>
+<a href="/users/add">Добавить пользователя</a>
+<table>
+    <thead>
+    <th>id</th>
+    <th>name</th>
+    <th>email</th>
+    <th>password</th>
+    </thead>
+    <tbody>
+
+    {% for user in users %}
+    <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.password }}</td>
+        <td>
+            <form method="post">
+                <input type="hidden" name="user_id" value="{{ user.id }}">
+                <button type="submit">Удалить</button>
+            </form>
+        </td>
+
+    </tr>
+    {% enfor %}
+    </tbody>
+</table>
+</body>
+</html>
