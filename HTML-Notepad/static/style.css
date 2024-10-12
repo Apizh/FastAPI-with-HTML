@@ -1,0 +1,53 @@
+/* Общие стили */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Заголовок */
+header {
+    background: #35424a;
+    color: #ffffff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+/* Основной контейнер */
+.container {
+    width: 80%;
+    margin: 20px auto;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Стили для списка пользователей */
+.user-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.user-list li {
+    background: #e2e2e2;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+/* Кнопки */
+.button {
+    background: #35424a;
+    color: #ffffff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.button:hover {
+    background: #455a64;
+}
