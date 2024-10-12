@@ -32,7 +32,7 @@ app.mount('/static', StaticFiles(directory='static'), name='static')
 
 @app.get('/users', response_class=HTMLResponse)
 def get_users(request: Request):
-    return templates.TemplateResponse('user.html', {'request': request, 'users': users})
+    return templates.TemplateResponse('index.html', {'request': request, 'users': users})
 
 
 @app.post('/users', response_class=HTMLResponse)
@@ -41,7 +41,7 @@ def delete_user(request: Request, user_id: int = Form(...)):
         if user.id == user_id:
             users.remove(user)
             break
-    return templates.TemplateResponse('user.html', {'request': request, 'users': users})
+    return templates.TemplateResponse('index.html', {'request': request, 'users': users})
 
 
 @app.get("/users/add", response_class=HTMLResponse)

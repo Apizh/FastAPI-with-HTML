@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Task Manager</h1>
+        <p>Welcome, {{ user }}! <a href="/logout">Logout</a></p>
+        <form action="/tasks/create" method="post" class="task-form">
+            <input type="text" name="title" placeholder="Task Title" required>
+            <textarea name="description" placeholder="Task Description"></textarea>
+            <button type="submit">Add Task</button>
+        </form>
+
+        <h2>Your Tasks</h2>
+        <ul class="task-list">
+            {% for task in tasks %}
+                <li>
+                    <form action="/tasks/{{ task.id }}/update" method="post" class="task-update-form">
+                        <span class="{% if task.completed %}completed{% endif %}">{{ task.title }}</span>
+                        <button type="submit">{% if task.completed %}Unmark{% else %}Mark Completed{% endif %}</button>
+                    </form>
+                    <form action="/tasks/{{ task.id }}/delete" method="post" class="task-delete-form">
+                        <button type="submit">Delete</button>
+                    </form>
+                </li>
+            {% else %}
+                <p>No tasks yet!</p>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
