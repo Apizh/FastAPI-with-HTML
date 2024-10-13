@@ -1,5 +1,4 @@
 from typing import Optional
-
 import uvicorn
 from fastapi import FastAPI, Request, Form, HTTPException, Depends, status
 from fastapi.responses import RedirectResponse
@@ -9,8 +8,12 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from starlette.middleware.sessions import SessionMiddleware
+from passlib.context import CryptContext  # Для работы с хэшированием паролей
 
 app = FastAPI()
+
+# Контекст для хэширования паролей с использованием bcrypt
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Подключение шаблонов
 templates = Jinja2Templates(directory="templates")
@@ -53,6 +56,16 @@ def get_current_user(request: Request):
     return user
 
 
+# Функция для хэширования пароля
+def hash_password(password: str):
+    return pwd_context.hash(password)
+
+
+# Функция для проверки пароля
+def verify_password(plain_password: str, hashed_password: str):
+    return pwd_context.verify(plain_password, hashed_password)
+
+
 # Маршрут для регистрации
 @app.get("/register")
 async def register_page(request: Request):
@@ -69,8 +82,9 @@ async def register_user(username: str = Form(...), password: str = Form(...)):
     if user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Username already exists")
 
-    # Пароль сохраняется без хэширования
-    conn.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+    # Хэширование пароля перед сохранением
+    hashed_password = hash_password(password)
+    conn.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed_password))
     conn.commit()
     conn.close()
 
@@ -90,9 +104,14 @@ async def login_user(request: Request, form_data: OAuth2PasswordRequestForm = De
     conn.row_factory = None  # Для пользователей row_factory не требуется
     user = conn.execute("SELECT * FROM users WHERE username = ?", (form_data.username,)).fetchone()
 
-    if not user or form_data.password != user[2]:  # user[1] содержит пароль
+    if not user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect username or password")
 
+    # Проверка хэшированного пароля
+    if not verify_password(form_data.password, user[2]):  # user[2] содержит хэш пароля из БД
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect username or password")
+
+    # Успешная авторизация
     request.session['user'] = form_data.username
     return RedirectResponse(url="/tasks", status_code=status.HTTP_303_SEE_OTHER)
 
@@ -196,6 +215,7 @@ def init_db():
 
 # Инициализация базы данных при запуске приложения
 init_db()
+
 if __name__ == '__main__':
     uvicorn.run(
         "main:app",
