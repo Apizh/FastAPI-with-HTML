@@ -1,33 +1,42 @@
+/* Фоновое изображение на весь фон */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: #f4f4f4;
+    background: url("background.jpg") no-repeat center center fixed;
+    background-size: cover;
 }
 
+/* Контейнер для задач с фиксированной шириной и легкой прозрачностью */
 .container {
-    max-width: 800px;
+    max-width: 600px; /* Фиксированная ширина */
     margin: 0 auto;
     padding: 20px;
-    background: white;
+    background: rgba(255, 255, 255, 0.9); /* Полупрозрачный белый фон */
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Легкая тень для объема */
 }
 
+/* Заголовок по центру */
 h1 {
     text-align: center;
 }
 
-.task-form, .task-list {
-    margin-top: 20px;
-}
-
+/* Поля ввода в форме добавления задачи */
 .task-form input, .task-form textarea {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
+    box-sizing: border-box; /* Учитывает padding в ширине */
 }
 
+/* Текстовое поле для задачи с вертикальной возможностью изменения размера */
+.task-form textarea {
+    resize: vertical; /* Позволяет изменять размер только по вертикали */
+    min-height: 50px; /* Минимальная высота для удобства ввода */
+}
+
+/* Стиль для списка задач */
 .task-list li {
     display: flex;
     justify-content: space-between;
@@ -36,6 +45,7 @@ h1 {
     border-bottom: 1px solid #ddd;
 }
 
+/* Стиль для завершенных задач */
 .completed {
     text-decoration: line-through;
     color: green;
